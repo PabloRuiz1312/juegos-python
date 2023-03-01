@@ -1,0 +1,1429 @@
+#PLEASE READ BEFORE PLAY OR USE THE CODE
+'''
+
+This game is designed with sprites and pygame figures, the ball its the protagonist ITS A FIGURE so 
+have PREWall COLLISIONS if some object like bumpers or stick change, please, CHANGE COLLISIONS TOO
+
+'''
+#Import necesary libraries
+
+#Pygame its very important to develop games
+import pygame
+#Random to object positions
+import random
+
+#---------------Surface and object create methods----------------#
+#Wall creator method
+def WallCreator (x,y,width,height):
+ 
+#This method create walls like a sprite assigning it a size,position and colour
+    borde = pygame.sprite.Sprite()
+
+    borde.image = pygame.Surface([width,height])
+    borde.image.fill(yellow)
+
+    borde.rect = borde.image.get_rect()
+    borde.rect.y = y
+    borde.rect.x = x
+
+    return borde
+
+#Method to represent walls in the game window and point marker
+def superficie (spritesPimball):
+#This method represent walls and points marker save him in a sprites group
+    Walles = pygame.sprite.Group()
+
+#----------------Window surface wall--------------------#
+    Wall_1 = WallCreator(0,0,10,1000)
+    Walles.add(Wall_1)
+
+    spritesPimball.add(Wall_1)
+
+    Wall_2 = WallCreator(990,0,50,1000)
+    Walles.add(Wall_2)
+
+    spritesPimball.add(Wall_2)
+
+    Wall_3 = WallCreator(0,0,990,10)
+    Walles.add(Wall_3)
+
+    spritesPimball.add(Wall_3) 
+#----------------Walls to represent point marker and stats--------#
+    Wall_4 = WallCreator(1000,150,350,20)
+    Walles.add(Wall_4)
+
+    spritesPimball.add(Wall_4)
+    
+    Wall_5 = WallCreator(1000,350,350,20)
+    Walles.add(Wall_5)
+
+    spritesPimball.add(Wall_5)
+
+    Wall_6 = WallCreator(1000,450,350,20)
+    Walles.add(Wall_6)
+
+    spritesPimball.add(Wall_6)
+
+    Wall_7 = WallCreator(1000,660,350,20)
+    Walles.add(Wall_7)
+
+    spritesPimball.add(Wall_7)
+
+    
+    
+    return Walles
+
+#Bumper creator method
+def BumperCreator (x,y,width,height):
+#This method create bumpers asigning it a size,position and color
+    bumper = pygame.sprite.Sprite()
+
+    bumper.image = pygame.Surface([width,height])
+    bumper.image.fill(white)
+
+    bumper.rect = bumper.image.get_rect()
+    bumper.rect.y = y
+    bumper.rect.x = x
+    
+    return bumper
+
+#Método para representar los bumpers dentro de la superficie de juego - Method to represent bumpers inside game surface
+def bumpers(SpriteObjetos):
+#This method represet and place bumpers in determined positions, bumpers save in a diferent sprites group    
+    bumpers = pygame.sprite.Group()
+
+    bumper_1 = BumperCreator(200,250,60,60)
+    bumpers.add(bumper_1)
+
+    SpriteObjetos.add(bumper_1)
+
+    bumper_2 = BumperCreator(700,250,60,60)
+    bumpers.add(bumper_2)
+
+    SpriteObjetos.add(bumper_2)
+
+    bumper_3 = BumperCreator(475,600,60,60)
+    bumpers.add(bumper_3)
+
+    SpriteObjetos.add(bumper_3)
+
+    return bumpers
+
+#Method to fill the bumper inside
+def fillBumpers (x,y,width,height):
+#This methot create the padding for the bumper
+    bumper = pygame.sprite.Sprite()
+
+    bumper.image = pygame.Surface([width,height])
+    bumper.image.fill(green)
+
+    bumper.rect = bumper.image.get_rect()
+    bumper.rect.y = y
+    bumper.rect.x = x
+    
+    return bumper
+
+#Method to represent the bumpers padding
+def fillBumperss (SpriteObjetos):
+#This method represent the bumpers padding asignin him a size,position and color, this padding save in the same sprites group    
+    bumpers = pygame.sprite.Group()
+
+    bumper_1 = fillBumpers(210,260,40,40)
+    bumpers.add(bumper_1)
+
+    SpriteObjetos.add(bumper_1)
+
+    bumper_2 = fillBumpers(710,260,40,40)
+    bumpers.add(bumper_2)
+
+    SpriteObjetos.add(bumper_2)
+
+    bumper_3 = fillBumpers(485,610,40,40)
+    bumpers.add(bumper_3)
+
+    SpriteObjetos.add(bumper_3)
+
+    return bumpers
+
+#Method to create the game platform 
+def PlatformCreator(x,y,width,height):
+#This method create the platform where sticks going
+    platform = pygame.sprite.Sprite()
+
+    platform.image = pygame.Surface([width,height])
+    platform.image.fill(yellow)
+
+    platform.rect = platform.image.get_rect()
+    platform.rect.y = y
+    platform.rect.x = x
+
+    return platform
+
+#Method to represent the left platform
+def LeftPlatform(SpriteObjetos):
+#This method represent the left platform usign rectangles that are getting shorter, left platform save in the bumpers sprites group
+    platform = pygame.sprite.Group()
+
+    platform_1 = PlatformCreator(10,960,320,10)
+    platform.add(platform_1)
+
+    SpriteObjetos.add(platform_1)
+
+    platform_2 = PlatformCreator(10,970,310,10)
+    platform.add(platform_2)
+
+    SpriteObjetos.add(platform_2)
+
+    platform_3 = PlatformCreator(10,980,300,10)
+    platform.add(platform_3)
+
+    SpriteObjetos.add(platform_3)
+
+    platform_4 = PlatformCreator(10,990,290,10)
+    platform.add(platform_4)
+
+    SpriteObjetos.add(platform_4)
+
+    return platform
+#Método para representar la platform derecha - Method to represent the right platform
+def RightPlatform(SpriteObjetos):
+#This method represents the right platform that are getting shorter, right platform save in bumpers sprites group
+    platform = pygame.sprite.Group()
+
+    platform_1 = PlatformCreator(570,960,370,10)
+    platform.add(platform_1)
+
+    SpriteObjetos.add(platform_1)
+
+    platform_2 = PlatformCreator(580,970,360,10)
+    platform.add(platform_2)
+
+    SpriteObjetos.add(platform_2)
+
+    platform_3 = PlatformCreator(590,980,350,10)
+    platform.add(platform_3)
+
+    SpriteObjetos.add(platform_3)
+
+    platform_4 = PlatformCreator(600,990,340,10)
+    platform.add(platform_4)
+
+    SpriteObjetos.add(platform_4)
+
+    return platform
+
+#Method to create the separator that separates the launcher from game space
+def createSeparator(SpriteObjetos):
+#This method create and represent the separator assinging him a size, position and color
+#Later this separator will be one of colisions that balls will have, separator save in the bumpers sprites group
+    separator = pygame.sprite.Sprite()
+
+    separator.image = pygame.Surface([20,900])
+    separator.image.fill(green)
+
+    separator.rect = separator.image.get_rect()
+
+    separator.rect.x=940
+    separator.rect.y=110
+
+    SpriteObjetos.add(separator)
+    
+    return separator
+
+#Method to represent the left stick
+def createLeftStick(x,y):
+#This method create the left stick, an image its assigned like surface
+#The image have to stay in the same folder that we save this program
+    stick = pygame.sprite.Sprite()
+
+    stick.image = pygame.image.load("flipperL.png")
+
+    stick.image = pygame.transform.rotate(stick.image,345)
+    stick.rect = stick.image.get_rect()
+
+    stick.rect.x = x
+    stick.rect.y = y
+
+    return stick
+
+#Método para crear el stick derecho - Method to create the right stick
+def createRightStick(x,y):
+#This method create the right stick, an image its assigned like surface
+#The image have to stay in the same folder that we save this program
+    stick = pygame.sprite.Sprite()
+
+    stick.image = pygame.image.load("flipperR.png")
+
+    stick.image = pygame.transform.rotate(stick.image,15)
+    stick.rect = stick.image.get_rect()
+
+    stick.rect.x = x
+    stick.rect.y = y
+
+    return stick
+
+#Method to create the left stick raised
+def createRaiseLeftStick(x,y):
+#This method create the same left stick but in other angle, contains the same image
+    stick = pygame.sprite.Sprite()
+
+    stick.image = pygame.image.load("flipperL.png")
+
+    stick.image = pygame.transform.rotate(stick.image,0)
+    stick.rect = stick.image.get_rect()
+
+    stick.rect.x = x
+    stick.rect.y = y
+
+    return stick
+
+#Método para crear el stick derecho en posición levantado - Method to create the right stick raised
+def createRaiseRightStick(x,y):
+#This method create the same right stick but in other angle, contains the same image
+    stick = pygame.sprite.Sprite()
+
+    stick.image = pygame.image.load("flipperR.png")
+
+    stick.image = pygame.transform.rotate(stick.image,0)
+    stick.rect = stick.image.get_rect()
+
+    stick.rect.x = x
+    stick.rect.y = y
+
+    return stick
+
+#Method to represent the right stick
+def LeftStick(SpriteObjetos):
+#This method create the right stick in normal position, his size have it the image, we place his position
+#The stick save in a diferent sprites group
+    stick = pygame.sprite.Group()
+
+    stick_1 = createLeftStick(310,945)
+    stick.add(stick_1)
+
+    SpriteObjetos.add(stick_1)
+
+    return stick
+
+#Method to represent the left stick
+def RightStick(SpriteObjetos):
+#This method create the left stick in normal position, his size have it the image, we place his position
+#The stick save in the same sprites group that the right stick
+    stick = pygame.sprite.Group()
+
+    stick_1 = createRightStick(470,945)
+    stick.add(stick_1)
+
+    SpriteObjetos.add(stick_1)
+
+    return stick
+#Method to represent the right stick raised
+def LeftRaiseStick(SpriteObjetos):
+#This method represents the right stick raised, image dont change only change his angle
+#This stick saves in a unique sprites group
+    stick = pygame.sprite.Group()
+
+    stick_1 = createRaiseLeftStick(310,945)
+    stick.add(stick_1)
+
+    SpriteObjetos.add(stick_1)
+
+    return stick
+
+#Method to represents the left stick raised
+def RightRaiseStick(SpriteObjetos):
+#This method represents the left stick raised, image dont change only change his angle
+#This stick saves in the same sprites group that right stick raised
+    stick = pygame.sprite.Group()
+
+    stick_1 = createRaiseRightStick(470,945)
+    stick.add(stick_1)
+
+    SpriteObjetos.add(stick_1)
+
+    return stick
+
+#Method to create the pipes
+def createPipe (x,y):
+#This method create the pipes, his surface saves in a image
+#The image have to stay in the same folder that the program
+    tuberia = pygame.sprite.Sprite()
+
+    tuberia.image = pygame.image.load("Tuberia.png")
+
+    tuberia.rect = tuberia.image.get_rect()
+
+    tuberia.rect.x = x
+    tuberia.rect.y = y
+
+    return tuberia
+
+#Método para representar las tuberias  - Method to represents the pipes
+def Tuberia (SpriteObjetos):
+#Este método se encarga de representar las tuberías, la superficie se guarda en la imagen la posición se la damos nosotros
+#This method represents the pipes, the surface save it in a image, we place the position
+    tuberia = pygame.sprite.Group()
+#Left pipe
+    tuberia_1 = createPipe (180,500)
+    tuberia.add(tuberia_1)
+    SpriteObjetos.add(tuberia_1)
+#Right pipe
+    tuberia_2 = createPipe (710,500)
+    tuberia.add(tuberia_2)
+    SpriteObjetos.add(tuberia_2)
+
+    return tuberia
+
+#-------------------Métodos esenciales para el funcionamiento del juego--------------------------#
+ 
+#Method to throws the ball
+def throw(pelota_y,lanzador_y,lanzador_height,contador,saltar,impulso,fuerza,velocidad_pelota_x):
+#This method takes care of the first game phase, that its throws the ball or restart the round if we lost a life
+
+#This conditional allows the launcher to move and launch the ball, if the inside boolean its false the launcher cand move
+    if(impulso==False):
+    #Gravity in the ball inside the launcher
+        if(pelota_y<lanzador_y-10):
+            pelota_y+=0.4
+        else:
+            pelota_y=lanzador_y-10
+    #We call keyPressed method for press or get pressed some determined keys the launcher down
+        teclaPulsada = pygame.key.get_pressed()
+        if ((teclaPulsada[pygame.K_DOWN] or teclaPulsada[pygame.K_s] or teclaPulsada[pygame.K_SPACE]) and saltar==True):
+        #When the keys are pressed the launcher down and a impulse force add
+            lanzador_y=lanzador_y+0.2
+            contador=contador+1.5
+            fuerza+=3
+            if(contador==1100 or contador>1100):
+                saltar=False
+        else:
+        #When the key arent pressed the laucher comes again to his initial position, and the ball ups, if the ball dont enter in the game surface the ball launch again
+            if(contador>0):
+                pelota_y-=(contador/280)
+                contador=contador-1
+                if(lanzador_y>800):
+                    lanzador_y=lanzador_y-2
+                else:
+                    lanzador_y = 800
+        if(pelota_y<75):
+        #When the ball enter in the game surface the launcher will be block 
+            impulso=True
+            contador=0
+            velocidad_pelota_x-=(fuerza/600)
+        
+    return pelota_y,lanzador_y,contador,saltar,impulso,fuerza,velocidad_pelota_x
+
+#Method to impulse the ball
+def push(pelota_x,impulsor_x,impulso,contador,inGame):
+#This method takes care of impulse the ball to start the game phase
+    if(impulso==True and inGame==False):
+    #Cuando este condicional se activa se mueve el impulsor a la misma altura que el separator y se desplaza la pelota un poco
+    #When this conditional it started the puser move to the same height that the separator and moves the ball a bit
+        if(contador<100):
+            impulsor_x-=0.5
+            contador+=1
+            pelota_x=pelota_x-0.9
+        if(contador>100 or contador==100):
+            contador=0
+            inGame=True
+    return pelota_x,impulsor_x,impulso,contador,inGame
+
+#Method to determinate the colisions with the bumpers
+def BumpersCollision(pelota_x,pelota_y,fuerza,fuerza_y,velocidad_pelota_x,velocidad_pelota_y,puntos,acumPuntos,acumPuntosVidaExtra,acumPuntosLegendario,poderes):
+#This method takes care of ball collisions with bumpers, when the ball reach bumper zone his velocity invert and it away a bit
+#Also this method take cares to add points when the ball collide
+
+    #Left bumper
+    #Left collision
+    if((pelota_x>190 and pelota_x<205) and (pelota_y>240 and pelota_y<320)):
+        pelota_x=184
+        fuerza+=600
+        velocidad_pelota_x=-(fuerza/800)
+        puntos=puntos+100
+        acumPuntos+=100
+        acumPuntosVidaExtra+=100
+        acumPuntosLegendario+=100
+        numero = int(random.randint(1,100))
+        if(numero==20 or numero==21):
+            poderes=True
+     #Right collision
+    if((pelota_x>250 and pelota_x<265) and (pelota_y>240 and pelota_y<320)):
+        pelota_x=275
+        fuerza+=600
+        velocidad_pelota_x=+(fuerza/800)
+        puntos=puntos+100
+        acumPuntos+=100
+        acumPuntosVidaExtra+=100
+        acumPuntosLegendario+=100
+        numero = int(random.randint(1,100))
+        if(numero==20 or numero==21):
+            poderes=True
+    #Collision for above
+    if((pelota_y>240 and pelota_y<255) and (pelota_x>190 and pelota_x<260)):
+        pelota_y=234
+        fuerza_y+=400
+        puntos=puntos+100
+        acumPuntos+=100
+        acumPuntosVidaExtra+=100
+        acumPuntosLegendario+=100
+        numero = int(random.randint(1,100))
+        if(numero==20 or numero==21):
+            poderes=True
+    #Collision from below
+    if((pelota_y>280 and pelota_y<315) and (pelota_x>190 and pelota_x<260)):
+        pelota_y=325
+        fuerza_y=0
+        puntos=puntos+100
+        acumPuntos+=100
+        acumPuntosVidaExtra+=100
+        acumPuntosLegendario+=100
+        numero = int(random.randint(1,100))
+        if(numero==20 or numero==21):
+            poderes=True
+    #Left Bumper
+    #Left collision
+    if((pelota_x>690 and pelota_x<705) and (pelota_y>240 and pelota_y<320)):
+        pelota_x = 683
+        fuerza+=600
+        velocidad_pelota_x=-(fuerza/800)
+        puntos=puntos+100
+        acumPuntos+=100
+        acumPuntosVidaExtra+=100
+        acumPuntosLegendario+=100
+        numero = int(random.randint(1,100))
+        if(numero==30 or numero==31):
+            poderes=True
+    #Right collision
+    if((pelota_x>750 and pelota_x<765) and (pelota_y>240 and pelota_y<330)):
+        pelota_x = 775
+        fuerza+=600
+        velocidad_pelota_x=+(fuerza/800)
+        puntos=puntos+100
+        acumPuntos+=100
+        acumPuntosVidaExtra+=100
+        acumPuntosLegendario+=100
+        numero = int(random.randint(1,100))
+        if(numero==30 or numero==31):
+            poderes=True
+    #Collision for above
+    if((pelota_y>240 and pelota_y<265) and (pelota_x>690 and pelota_x<765)):
+        pelota_y = 244
+        fuerza_y+=400
+        puntos=puntos+100
+        acumPuntos+=100
+        acumPuntosVidaExtra+=100
+        acumPuntosLegendario+=100
+        numero = int(random.randint(1,100))
+        if(numero==30 or numero==31):
+            poderes=True
+    #Collision from below
+    if((pelota_y>300 and pelota_y<315) and (pelota_x>690 and pelota_x<765)):
+        pelota_y = 325
+        fuerza_y=0
+        puntos=puntos+100
+        acumPuntos+=100
+        acumPuntosVidaExtra+=100
+        acumPuntosLegendario+=100
+        numero = int(random.randint(1,100))
+        if(numero==30 or numero==31):
+            poderes=True
+    #Bumper below
+    #Left collision
+    if((pelota_x>465 and pelota_x<480) and (pelota_y>590 and pelota_y<670)):
+        pelota_x = 459
+        fuerza+=600
+        velocidad_pelota_x=-(fuerza/800)
+        puntos=puntos+100
+        acumPuntos+=100
+        acumPuntosVidaExtra+=100
+        acumPuntosLegendario+=100
+        numero = int(random.randint(1,100))
+        if(numero==40 or numero==41):
+            poderes=True
+    #Right collision
+    if((pelota_x>525 and pelota_x<540) and (pelota_y>590 and pelota_y<670)):
+        pelota_x = 550
+        fuerza+=600
+        velocidad_pelota_x=+(fuerza/800)
+        puntos+=100
+        acumPuntos+=100
+        acumPuntosVidaExtra+=100
+        acumPuntosLegendario+=100
+        numero = int(random.randint(1,100))
+        if(numero==40 or numero==41):
+            poderes=True
+    #Collision for above
+    if((pelota_y>590 and pelota_y<610) and (pelota_x>465 and pelota_x<540)):
+        pelota_y = 580
+        fuerza_y+=600
+        puntos=puntos+100
+        acumPuntos+=100
+        acumPuntosVidaExtra+=100
+        acumPuntosLegendario+=100
+        numero = int(random.randint(1,100))
+        if(numero==40 or numero==41):
+            poderes=True
+    #Collision from below
+    if((pelota_y>650 and pelota_y<665) and (pelota_x>465 and pelota_x<540)):
+        pelota_y = 675
+        fuerza_y=0
+        puntos=puntos+100
+        acumPuntos+=100
+        acumPuntosVidaExtra+=100
+        acumPuntosLegendario+=100
+        numero = int(random.randint(1,100))
+        if(numero==40 or numero==41):
+            poderes=True
+
+    return pelota_x,pelota_y,fuerza,fuerza_y,velocidad_pelota_x,velocidad_pelota_y,puntos,acumPuntos,acumPuntosVidaExtra,acumPuntosLegendario,poderes
+
+#Method to extra life bumper collision
+def ExtraLifeBumperCollision(vidaExtra,acumPuntosVidaExtra,bumperExtra_x,bumperExtra_y,pelota_x,pelota_y,nuevaPosicion,contadorVidaExtra,vidas):
+#This method takes care of extra life bumper collision and add lifes to the point marker
+    if(vidaExtra==True):
+    #This bumper isnt a sprite so it needs special variables to the conditionals run fine
+    #The extra life bumper keeps while the timer exist, that also be decreased
+        acumPuntosVidaExtra = 0
+        contadorVidaExtra-=2
+        colision_x = bumperExtra_x-10
+        colision_x2 = bumperExtra_x+10
+        colisionSuma_x = bumperExtra_x+50
+        colisionSuma_x2 = bumperExtra_x+70
+        colision_y = bumperExtra_y-10
+        colision_y2 = bumperExtra_y+10
+        colisionSuma_y = bumperExtra_y+50
+        colisionSuma_y2 = bumperExtra_y+70
+        #If the ball collide, a life add to the point marker and the extra life bumper get a new position
+        #Left collision
+        if((pelota_x>colision_x and pelota_x<colision_x2) and (pelota_y>colision_y and pelota_y<colisionSuma_y2)):
+            vidaExtra=False
+            nuevaPosicion = True
+            vidas=vidas+1
+        #Right collision
+        if((pelota_x>colisionSuma_x and pelota_x<colisionSuma_x2) and (pelota_y>colision_y and pelota_y<colisionSuma_y2)):
+            vidaExtra=False
+            nuevaPosicion = True
+            vidas=vidas+1
+        #Colision por arriba - Collision for above
+        if((pelota_y>colision_y and pelota_y<colision_y2) and (pelota_x>colision_x and pelota_x<colisionSuma_x2)):
+            vidaExtra=False
+            nuevaPosicion = True
+            vidas = vidas+1
+        #Collision for below
+        if((pelota_y>colisionSuma_y and pelota_y<colisionSuma_y2) and (pelota_x>colision_x and pelota_x<colisionSuma_x2)):
+            vidaExtra=False
+            nuevaPosicion = True
+            vidas = vidas+1
+        #If the timer times out the bumper desapear and get a new position
+        if(contadorVidaExtra==0 or contadorVidaExtra<0):
+            vidaExtra=False
+            contadorVidaExtra=10000
+            nuevaPosicion=True
+    else:
+        contadorVidaExtra = 10000
+    return vidaExtra,acumPuntosVidaExtra,bumperExtra_x,bumperExtra_y,pelota_x,pelota_y,nuevaPosicion,contadorVidaExtra,vidas  
+
+#Method to legendary bumper collisions
+def LegendaryBumperCollision(legendario,acumPuntosLegendario,bumperLegendario_x,bumperLegendario_y,pelota_x,pelota_y,nuevaPosicion,contadorLegendario,puntosGravedad):
+    #This method takes care of the collision of legendary bumper, and decrease the gravity on 4 points if the ball collide
+    if(legendario == True):
+    #This bumper isnt a sprite so it needs special variables to the conditionals run fine
+        acumPuntosLegendario = 0
+        contadorLegendario-=2
+        colision_x = bumperLegendario_x-10
+        colision_x2 = bumperLegendario_x+10
+        colisionSuma_x = bumperLegendario_x+50
+        colisionSuma_x2 = bumperLegendario_x+70
+        colision_y = bumperLegendario_y-10
+        colision_y2 = bumperLegendario_y+10
+        colisionSuma_y = bumperLegendario_y+50
+        colisionSuma_y2 = bumperLegendario_y+70
+        #If the ball collide with the bumper, gravity decrease on 4 points and the bumper gets a new position
+        #Left collision
+        if((pelota_x>colision_x and pelota_x<colision_x2) and (pelota_y>colision_y and pelota_y<colisionSuma_y2)):
+            legendario=False
+            nuevaPosicion = True
+            puntosGravedad-=0.004
+            acumPuntosLegendario = 0
+            if(puntosGravedad<=0):
+                puntosGravedad = 0.002
+        #Right collision
+        if((pelota_x>colisionSuma_x and pelota_x<colisionSuma_x2) and (pelota_y>colision_y and pelota_y<colisionSuma_y2)):
+            legendario=False
+            nuevaPosicion = True
+            puntosGravedad-=0.004
+            acumPuntosLegendario = 0
+            if(puntosGravedad<=0):
+                puntosGravedad = 0.002
+        #Collision for above
+        if((pelota_y>colision_y and pelota_y<colision_y2) and (pelota_x>colision_x and pelota_x<colisionSuma_x2)):
+            legendario=False
+            nuevaPosicion = True
+            puntosGravedad-=0.004
+            acumPuntosLegendario = 0
+            if(puntosGravedad<=0):
+                puntosGravedad = 0.002
+        #Collision from below
+        if((pelota_y>colisionSuma_y and pelota_y<colisionSuma_y2) and (pelota_x>colision_x and pelota_x<colisionSuma_x2)):
+            legendario=False
+            nuevaPosicion = True
+            puntosGravedad-=0.004
+            acumPuntosLegendario = 0
+            if(puntosGravedad<=0):
+                puntosGravedad = 0.002
+        #If the timer times out, the bumper disaperar and get a new position
+        if(contadorLegendario==0 or contadorLegendario<0):
+            legendario=False
+            contadorLegendario=15000
+            nuevaPosicion=True
+    else:
+        contadorLegendario = 15000
+    
+    return legendario,acumPuntosLegendario,bumperLegendario_x,bumperLegendario_y,pelota_x,pelota_y,nuevaPosicion,contadorLegendario,puntosGravedad
+#Method to pipes collisions
+def pipesCollision(pelota_x,pelota_y,velocidad_pelota_x,velocidad_pelota_y,fuerza):
+#This method takes care of pipes collide
+    #-----------------Lateral including inside ---------------#
+    #Left pipe
+    if((pelota_x>195 and pelota_x<200) and (pelota_y>490 and pelota_y<763)):
+        velocidad_pelota_x = velocidad_pelota_x * (-1)
+    if((pelota_x>260 and pelota_x<265) and (pelota_y>490 and pelota_y<763)):
+        velocidad_pelota_x = velocidad_pelota_x * (-1)
+    #Right pipe
+    if((pelota_x>725 and pelota_x<730) and (pelota_y>490 and pelota_y<763)):
+        velocidad_pelota_x = -velocidad_pelota_x
+    if((pelota_x>790 and pelota_x<795) and (pelota_y>490 and pelota_y<763)):
+        velocidad_pelota_x = -velocidad_pelota_x
+    
+    #ANNOTATION: If the ball enter in the pipe, the same collisions are applied as outside but the reverse, you can see it if you draw his sprite on top that the ball sprite 
+    return pelota_x,pelota_y,velocidad_pelota_x,velocidad_pelota_y,fuerza
+#Method to choose and use a superpower
+def superPower (poderes,invertirGravedad,activarBumpers,rescue,activar,puntosGravedad,contadorGravedad,vidaExtra,legendario,inGame):
+#This method takes care to assign and activate a power
+    if(inGame==True):
+        if(poderes==True):
+            numero = int(random.randint(1,3))
+            if(numero==1 and activacionBumpers==False and rescue==False):
+                invertirGravedad = True
+            elif(numero==2 and invertirGravedad==False and rescue==False):
+                activarBumpers = True
+            elif(numero==3 and invertirGravedad==False and activacionBumpers==False):
+                rescue = True
+            poderes=False
+        teclaPulsada = pygame.key.get_pressed()
+        #If this power appears, can be invert the gravity in 20 seconds or when his valor reach 0
+        if(invertirGravedad==True and poderes==False):
+            if(teclaPulsada[pygame.K_f] and contadorGravedad==20000):
+                puntosGravedad = puntosGravedad * (-1)
+                activar=True
+            if(activar==True):
+                contadorGravedad-=2
+                if(puntosGravedad>0):
+                    puntosGravedad = 0.001
+                    puntosGravedad = puntosGravedad * (-1)
+                    activar=False
+                    contadorGravedad=0
+            if(contadorGravedad==0 or contadorGravedad<0):
+                puntosGravedad = puntosGravedad * (-1)
+                invertirGravedad = False
+                activar=False
+                contadorGravedad = 20000
+        #If this power appears, can be activate the 2 specials bumpers in the same time
+        if(activarBumpers == True and poderes==False):
+            if(teclaPulsada[pygame.K_f]):
+                vidaExtra = True
+                legendario = True
+                activarBumpers = False
+        #If this power appears, will be activate a brigde in the sticks hole that protect the balls falling
+        if(rescue==True and poderes==False):
+            if(teclaPulsada[pygame.K_f]):
+                activar = True
+            if(activar==True):
+                contadorGravedad-=2
+            if(contadorGravedad==0 or contadorGravedad<0):
+                rescue = False
+                activar = False
+                contadorGravedad = 20000
+    return poderes,invertirGravedad,activarBumpers,rescue,activar,puntosGravedad,contadorGravedad,vidaExtra,legendario,inGame
+#Method to draw the bridge when rescue actives
+def WallRescue(spritesPinball):
+
+#This method draw the bridge that protect the balls from losing the round
+    rescue = pygame.sprite.Group()
+
+    rescue_1 = WallCreator(320,930,260,100)
+    rescue.add(rescue_1)
+
+    spritesPinball.add(rescue_1)
+
+    return rescue
+
+#Method to rescue collisions
+def PlaceRescue(pelota_x,pelota_y,pelota_x1,pelota_y1,pelota_x2,pelota_y2,fuerza_y,fuerza_y1,fuerza_y2):
+#Este método sirve para que las pelotas colisionen con el puente del poder rescue 
+#This method takes care of the balls collide with the brigde of rescue power
+    if(pelota_y>930 and (pelota_x>315 and pelota_x<585)):
+        fuerza_y+=800
+    if(pelota_y1>930 and (pelota_x1>315 and pelota_x1<585)):
+        fuerza_y1+=800
+    if(pelota_y2>930 and (pelota_x2>315 and pelota_x2<585)):
+        fuerza_y2+=800
+    return pelota_x,pelota_y,pelota_x1,pelota_y1,pelota_x2,pelota_y2,fuerza_y,fuerza_y1,fuerza_y2  
+#Game phase method
+def StartGame(pelota_x,pelota_y,puntosGravedad,velocidad_pelota_x,velocidad_pelota_y,fuerza,impulsor_x,inGame,impulso,saltar,puntos,recordPuntos,acumPuntos,acumPuntosVidaExtra,extras1,extras2,levantar,vidaExtra,vidas,bumperExtra_x,bumperExtra_y,contadorVidaExtra,nuevaPosicion,nuevaPosicionLegendaria,fuerza_y,legendario,acumPuntosLegendario,bumperLegendario_x,bumperLegendario_y,contadorLegendario,poderes):
+#This method takes care of game operation, takes care of balls movement, balls collide (calling the other methods), points condition, sticks position and end of the round
+    if(inGame==True):
+        nuevaPosicion = False
+        nuevaPosicionLegendaria = False
+        #Gravity application in the ball in the game phase and horizontal force
+        if(fuerza>1000):
+            fuerza=fuerza-2
+        else:
+            fuerza=799
+        if(fuerza_y>1):
+            velocidad_pelota_y = (fuerza_y/280) *(-1)
+            fuerza_y=fuerza_y - 1                           
+        else:
+            puntoGravedadMax = False
+            fuerza_y=0
+            velocidad_pelota_y+=puntosGravedad         
+        #------------------Raise Sticks and Sticks collision-----------#
+        #Call keyPressed method again
+        teclaPulsada = pygame.key.get_pressed()
+        if((teclaPulsada[pygame.K_DOWN]) or teclaPulsada[pygame.K_SPACE]):
+            levantar = True
+        else:
+            levantar = False
+        #Sticks collision without raise
+        if(levantar==False):
+            if((pelota_y>950 and pelota_y<970) and (pelota_x>305 and pelota_x<435)):
+                pelota_y = 940
+                fuerza+=900
+                fuerza_y+=700
+                velocidad_pelota_y = 0
+                numero = random.randint(1,2)
+                if(numero==1):
+                    velocidad_pelota_x=+(fuerza/800)
+                if(numero==2):
+                    velocidad_pelota_x=-(fuerza/800)
+            if((pelota_y>950 and pelota_y<970) and (pelota_x>470 and pelota_x<600)):
+                pelota_y = 940
+                fuerza+=900
+                fuerza_y+=700
+                velocidad_pelota_y = 0
+                numero = random.randint(1,2)
+                if(numero==1):
+                    velocidad_pelota_x=+(fuerza/800)
+                if(numero==2):
+                    velocidad_pelota_x=-(fuerza/800)
+        #Stick raise collision
+        if(levantar==True):
+            if((pelota_y>930 and pelota_y<960) and (pelota_x>305 and pelota_x<435)):
+                pelota_y = 930
+                fuerza+=1500
+                fuerza_y+=1500
+                velocidad_pelota_y = 0
+                numero = random.randint(1,2)
+                if(numero==1):
+                    velocidad_pelota_x=+(fuerza/800)
+                if(numero==2):
+                    velocidad_pelota_x=-(fuerza/800)
+            if((pelota_y>935 and pelota_y<960) and (pelota_x>485 and pelota_x<600)):
+                pelota_y = 930
+                fuerza+=1500
+                fuerza_y+=1200
+                velocidad_pelota_y = 0
+                numero = random.randint(1,2)
+                if(numero==1):
+                    velocidad_pelota_x=+(fuerza/800)
+                if(numero==2):
+                    velocidad_pelota_x=-(fuerza/800)
+        #-----------------Walls collision-----------------------------#
+        #Left wall
+        if(pelota_x<20):
+            velocidad_pelota_x=+(fuerza/800)
+        #Separator
+        if(pelota_x>930):
+            velocidad_pelota_x=-(fuerza/800)
+        #----------------Bumpers collision -----------------------------#
+        #The indicated bumpers collision method is called
+        pelota_x,pelota_y,fuerza,fuerza_y,velocidad_pelota_x,velocidad_pelota_y,puntos,acumPuntos,acumPuntosVidaExtra,acumPuntosLegendario,poderes = BumpersCollision(pelota_x,pelota_y,fuerza,fuerza_y,velocidad_pelota_x,velocidad_pelota_y,puntos,acumPuntos,acumPuntosVidaExtra,acumPuntosLegendario,poderes) 
+        #----------------Pipes collisions -----------------------------#
+        #The indicated method of pipes collision is called
+        pelota_x,pelota_y,velocidad_pelota_x,velocidad_pelota_y,fuerza = pipesCollision(pelota_x,pelota_y,velocidad_pelota_x,velocidad_pelota_y,fuerza)
+        #-------------------Collisions for above and collisions in platforms---------------------------#
+        #Collisions for above the window
+        if(pelota_y<20):
+            pelota_y=30
+            fuerza_y=0
+            velocidad_pelota_y = velocidad_pelota_y * (-1)
+        #Left platform collision
+        if((pelota_y>960 and pelota_y<990) and (pelota_x>10 and pelota_x<309)):
+            pelota_y = 955
+            fuerza_y+=600
+            velocidad_pelota_y = 0
+        #Right platform collision
+        if((pelota_y>960 and pelota_y<990) and (pelota_x>596 and pelota_x<930)):
+            pelota_y = 955
+            fuerza_y+=600
+            velocidad_pelota_y = 0
+            
+        
+        #----------------Point condition---------------------------------------#
+        #Extra life bumper condition
+        if(acumPuntosVidaExtra>=1000 and vidaExtra==False):
+            vidaExtra=True
+            acumPuntosVidaExtra = 0
+        #Legendary bumper condition
+        if(acumPuntosLegendario>=5000 and legendario==False):
+            legendario=True
+            acumPuntosLegendario = 0
+        #Gravity increment condition
+        if(acumPuntos>=750):
+            acumPuntos=0
+            if(puntosGravedad<0.01):
+                puntosGravedad+=0.001
+        #Extra balls condition
+        elif(acumPuntos>=500 and (extras1==False and extras2==False)) :     
+            extras1=True
+            extras2=True
+                 
+        #-------------------Extra life bumper collision -----------------------------#
+        #The indicated method of extra life bumper collision is called
+
+        vidaExtra,acumPuntosVidaExtra,bumperExtra_x,bumperExtra_y,pelota_x,pelota_y,nuevaPosicion,contadorVidaExtra,vidas = ExtraLifeBumperCollision(vidaExtra,acumPuntosVidaExtra,bumperExtra_x,bumperExtra_y,pelota_x,pelota_y,nuevaPosicion,contadorVidaExtra,vidas)
+        
+        #-------------------Legendary bumper collision---------------------#
+        #The indicated method of legendary bumper collisions is called
+
+        legendario,acumPuntosLegendario,bumperLegendario_x,bumperLegendario_y,pelota_x,pelota_y,nuevaPosicionLegendaria,contadorLegendario,puntosGravedad = LegendaryBumperCollision(legendario,acumPuntosLegendario,bumperLegendario_x,bumperLegendario_y,pelota_x,pelota_y,nuevaPosicionLegendaria,contadorLegendario,puntosGravedad)
+        
+        #-------------------Fin de la ronda - End of the round------------------------------------#
+        #When the ball beat the bottom of the window a life is taken, the variables that allows game operation resets and the ball place in launcher position
+        if(pelota_y>1000):
+            vidas=vidas-1
+            contadorVidaExtra=10000
+            contadorLegendario=15000
+            pelota_y=750
+            pelota_x=975
+            fuerza=0
+            fuerza_y=0
+            impulsor_x=990
+            inGame=False
+            impulso=False
+            saltar=True
+            extras1=False
+            extras2=False
+            vidaExtra=False
+            legendario = False
+            levantar=False
+            nuevaPosicion = True
+            nuevaPosicionLegendaria = True
+            poderes = False
+            puntosGravedad=0.001
+            velocidad_pelota_y = 0
+            #Also maximun points are scored
+            if(puntos>recordPuntos):
+                recordPuntos = puntos
+            acumPuntos=0
+            acumPuntosVidaExtra=0
+            acumPuntosLegendario = 0
+            puntos=0
+        #Ball movement
+        pelota_x+=velocidad_pelota_x
+        pelota_y+=velocidad_pelota_y
+               
+    return pelota_x,pelota_y,puntosGravedad,velocidad_pelota_x,velocidad_pelota_y,fuerza,impulsor_x,inGame,impulso,saltar,puntos,recordPuntos,acumPuntos,acumPuntosVidaExtra,extras1,extras2,levantar,vidaExtra,vidas,bumperExtra_x,bumperExtra_y,contadorVidaExtra,nuevaPosicion,nuevaPosicionLegendaria,fuerza_y,legendario,acumPuntosLegendario,bumperLegendario_x,bumperLegendario_y,contadorLegendario,poderes
+
+#First extra ball method
+def FirstExtraBall(extras1,pelota_x1,pelota_y1,velocidad_pelota_x1,velocidad_pelota_y1,fuerza1,fuerza_y1,puntosGravedad,puntos,acumPuntos,acumPuntosVidaExtra,levantar,acumPuntosLegendario,poderes):
+#This method takes care of movement and collisions (callings the methotds) of first extra ball
+    if(extras1==True):
+        #Gravity application and horizontal force
+        if(fuerza1>800):
+            fuerza1=fuerza1-2
+        else:
+            fuerza1=799
+        if(fuerza_y1>1):
+            velocidad_pelota_y1 = (fuerza_y1/300) *(-1)
+            fuerza_y1 =fuerza_y1 - 1
+        else:
+            fuerza_y1=0
+            velocidad_pelota_y1 += puntosGravedad 
+        #---------------------Sticks collisions----------------------------------#
+        #Stick without raise collision
+        if(levantar==False):
+            if((pelota_y1>950 and pelota_y1<960) and (pelota_x1>310 and pelota_x1<435)):
+                pelota_y1 = 940
+                fuerza1+=900
+                fuerza_y1+=700
+                numero = random.randint(1,2)
+                if(numero==1):
+                    velocidad_pelota_x1=+(fuerza1/800)
+                if(numero==2):
+                    velocidad_pelota_x1=-(fuerza1/800)
+            if((pelota_y1>950 and pelota_y1<960) and (pelota_x1>470 and pelota_x1<595)):
+                pelota_y1 = 940
+                fuerza1+=900
+                fuerza_y1+=700
+                numero = random.randint(1,2)
+                if(numero==1):
+                    velocidad_pelota_x1=+(fuerza/800)
+                if(numero==2):
+                    velocidad_pelota_x1=-(fuerza/800)
+        #Stick raise collision
+        if(levantar==True):
+            if((pelota_y1>935 and pelota_y1<940) and (pelota_x1>310 and pelota_x1<425)):
+                pelota_y1 = 930
+                fuerza1+=1500
+                fuerza_y1+=1500
+                numero = random.randint(1,2)
+                if(numero==1):
+                    velocidad_pelota_x1=+(fuerza/800)
+                if(numero==2):
+                    velocidad_pelota_x1=-(fuerza/800)
+            if((pelota_y1>935 and pelota_y1<940) and (pelota_x1>485 and pelota_x1<595)):
+                pelota_y1 = 930
+                fuerza1+=1500
+                fuerza_y1+=1200
+                numero = random.randint(1,2)
+                if(numero==1):
+                    velocidad_pelota_x1=+(fuerza/800)
+                if(numero==2):
+                    velocidad_pelota_x1=-(fuerza/800)
+        #-----------------Walls collision----------------------------#
+        #Left wall collision
+        if(pelota_x1<20):
+            velocidad_pelota_x1=+(fuerza1/800)
+        #Right wall collision
+        if(pelota_x1>930):
+            velocidad_pelota_x1=-(fuerza1/800)
+        #------------------Bumpers collision----------------------------#
+        #The indicated collision method is called
+        pelota_x1,pelota_y1,fuerza1,fuerza_y1,velocidad_pelota_x1,velocidad_pelota_y1,puntos,acumPuntos,acumPuntosVidaExtra,acumPuntosLegendario,poderes = BumpersCollision(pelota_x1,pelota_y1,fuerza1,fuerza_y1,velocidad_pelota_x1,velocidad_pelota_y1,puntos,acumPuntos,acumPuntosVidaExtra,acumPuntosLegendario,poderes)
+        #------------------Pipes collisions---------------------------#
+        #The indicated pipes collisions metod is called
+        pelota_x1,pelota_y1,velocidad_pelota_x1,velocidad_pelota_y1,fuerza1=pipesCollision(pelota_x1,pelota_y1,velocidad_pelota_x1,velocidad_pelota_y1,fuerza1)
+        #-------------------Collision for above and platform-----------------------------#
+        #Collision with the top of the window
+        if(pelota_y1<20):
+            pelota_y1=30
+            fuerza_y1=0
+            velocidad_pelota_y1 = velocidad_pelota_y1 * (-1)
+        #Left platform collision
+        if((pelota_y1>960 and pelota_y1<990) and (pelota_x1>10 and pelota_x1<309)):
+            pelota_y1 = 955
+            fuerza_y1+=600
+        #Right platform collision
+        if((pelota_y1>960 and pelota_y1<990) and (pelota_x1>596 and pelota_x1<930)):
+            pelota_y1 = 955
+            fuerza_y1+=600
+        #--------------------End of extra ball----------------------------#
+        #When the ball beat the botton of the window, it stop representing and the position is changed randomly  
+        if(pelota_y1>1000):
+            extras1=False
+            velocidad_pelota_y1 = 0
+            fuerza1=600
+            fuerza_y1 = 0
+            pelota_x1=random.randint(20,900)
+            pelota_y1=random.randint(80,950)
+        #Ball movement
+        pelota_x1+=velocidad_pelota_x1
+        pelota_y1+=velocidad_pelota_y1
+        return extras1,pelota_x1,pelota_y1,velocidad_pelota_x1,velocidad_pelota_y1,fuerza1,fuerza_y1,puntosGravedad,puntos,acumPuntos,acumPuntosVidaExtra,levantar,acumPuntosLegendario,poderes
+
+#Second extra ball method
+def SecondExtraBall(extras2,pelota_x2,pelota_y2,velocidad_pelota_x2,velocidad_pelota_y2,fuerza2,fuerza_y2,puntosGravedad,puntos,acumPuntos,acumPuntosVidaExtra,levantar,acumPuntosLegendario,poderes):
+#This method takes care of movement and collision (calling the methods) pf seconds extra ball
+
+    if(extras2==True):
+        #Gravity application and horizontal force
+        if(fuerza2>800):
+            fuerza2=fuerza2-2
+        else:
+            fuerza2=799
+        if(fuerza_y2>1):
+            velocidad_pelota_y2 = (fuerza_y2/300) *(-1)
+            fuerza_y2=fuerza_y2 - 1
+        else:
+            fuerza_y2=0
+            velocidad_pelota_y2+=puntosGravedad
+        #---------------------Sticks collisions----------------------#
+        #Sticks without raise
+        if(levantar==False):
+            if((pelota_y2>950 and pelota_y2<960) and (pelota_x2>310 and pelota_x2<435)):
+                pelota_y2 = 940
+                fuerza2+=900
+                fuerza_y2+=700
+                numero = random.randint(1,2)
+                if(numero==1):
+                    velocidad_pelota_x2=+(fuerza2/800)
+                if(numero==2):
+                    velocidad_pelota_x2=-(fuerza2/800)
+            if((pelota_y2>950 and pelota_y2<960) and (pelota_x2>470 and pelota_x2<595)):
+                pelota_y2 = 940
+                fuerza2+=900
+                fuerza_y2+=700
+                numero = random.randint(1,2)
+                if(numero==1):
+                    velocidad_pelota_x2=+(fuerza2/800)
+                if(numero==2):
+                    velocidad_pelota_x2=-(fuerza2/800)
+        #Stick raise
+        if(levantar==True):
+            if((pelota_y2>935 and pelota_y2<940) and (pelota_x2>310 and pelota_x2<425)):
+                pelota_y2 = 930
+                fuerza2+=1500
+                fuerza_y2+=1500
+                numero = random.randint(1,2)
+                if(numero==1):
+                    velocidad_pelota_x2=+(fuerza2/800)
+                if(numero==2):
+                    velocidad_pelota_x2=-(fuerza2/800)
+            if((pelota_y2>935 and pelota_y2<940) and (pelota_x2>485 and pelota_x2<595)):
+                pelota_y2 = 930
+                fuerza2+=1500
+                fuerza_y2+=1200
+                numero = random.randint(1,2)
+                if(numero==1):
+                    velocidad_pelota_x2=+(fuerza2/800)
+                if(numero==2):
+                    velocidad_pelota_x2=-(fuerza2/800)
+
+         #------------------Bumpers collision----------------------------#
+        #The indicated bumper collision method is called
+        pelota_x2,pelota_y2,fuerza2,fuerza_y2,velocidad_pelota_x2,velocidad_pelota_y2,puntos,acumPuntos,acumPuntosVidaExtra,acumPuntosLegendario,poderes = BumpersCollision(pelota_x2,pelota_y2,fuerza2,fuerza_y2,velocidad_pelota_x2,velocidad_pelota_y2,puntos,acumPuntos,acumPuntosVidaExtra,acumPuntosLegendario,poderes)
+
+        #-----------------Pipes collision---------------------------#
+        #The indicated pipes collision method is called 
+        pelota_x2,pelota_y2,velocidad_pelota_x2,velocidad_pelota_y2,fuerza2=pipesCollision(pelota_x2,pelota_y2,velocidad_pelota_x2,velocidad_pelota_y2,fuerza2)
+
+        #-----------------Walls collisions----------------------------#
+        #Left wall collision
+        if(pelota_x2<20):
+            velocidad_pelota_x2=+(fuerza2/800)
+        #Separator collision
+        if(pelota_x2>930):
+            velocidad_pelota_x2=-(fuerza2/800)
+        #--------------------Top and platform collision ----------------------------#
+        #Colisión con el tope de lla ventana - Collision with the top of the window
+        if(pelota_y2<20):
+            fuerza_y2=0
+            pelota_y2=30
+            velocidad_pelota_y2 = velocidad_pelota_y2 * (-1)
+        #Left platform collision
+        if((pelota_y2>960 and pelota_y2<990) and (pelota_x2>10 and pelota_x2<309)):
+            pelota_y2 = 955
+            fuerza_y2+=600
+        #Right platform collision
+        if((pelota_y2>960 and pelota_y2<990) and (pelota_x2>596 and pelota_x2<930)):
+            pelota_y2 = 955
+            fuerza_y2+=600
+        #-------------------------------------End of second extra ball---------------------#
+        #When the ball beat the bottom of the window the second extra ball disappear and the second extra ball position is changed
+        if(pelota_y2>1000):
+            extras2=False
+            velocidad_pelota_y2 = 0
+            fuerza2=600
+            fuerza_y2 = 0
+            pelota_x2=random.randint(20,800)
+            pelota_y2=random.randint(80,800)
+        #Ball movement
+        pelota_x2+=velocidad_pelota_x2
+        pelota_y2+=velocidad_pelota_y2
+        return extras2,pelota_x2,pelota_y2,velocidad_pelota_x2,velocidad_pelota_y2,fuerza2,fuerza_y2,puntosGravedad,puntos,acumPuntos,acumPuntosVidaExtra,levantar,acumPuntosLegendario,poderes 
+#------------------VARIABLES-------------------# 
+
+#------------------SURFACE AND OBJECT CREATION VARIABLES------------------------#  
+#CWe create the size of the window
+width = 1350
+height = 1000
+#We create the colors that we use in the game
+white = pygame.Color (255,255,255)
+black = pygame.Color (0,0,0)
+red = pygame.Color (255,0,0)
+green = pygame.Color (0,255,0)
+blue = pygame.Color (0,0,255)
+orange = pygame.Color (255,128,0)
+yellow = pygame.Color (255,255,0)
+#We inicializate the pygame around
+pygame.init()
+#We create the window and we write a name
+screen = pygame.display.set_mode((width,height))
+pygame.display.set_caption('Pimball')
+#We create the sprites groups
+WallsSprites = pygame.sprite.Group()
+SpriteObjetos = pygame.sprite.Group()
+SpriteObjetosStick = pygame.sprite.Group()
+SpriteObjetosStickLevantado = pygame.sprite.Group()
+SpritePoderesrescue = pygame.sprite.Group()
+#We create the game ball (protagonist)
+pelota_radio = 10
+pelota_x=975
+pelota_y=550
+velocidad_pelota_x = 0
+velocidad_pelota_y = 0
+#Creamos las pelotas especiales (pelotas extras por condición de puntos) - We create the extra balls (will appear for points condition)
+#Pelota extra 1 - First extra ball
+pelota_radio1 = 10
+pelota_x1=random.randint(20,910)
+pelota_y1=random.randint(80,980)
+velocidad_pelota_x1 = 0.3
+velocidad_pelota_y1 = 0
+#Pelota extra 2 - Second extra ball
+pelota_radio2 = 10
+pelota_x2=random.randint(20,900)
+pelota_y2=random.randint(80,950)
+velocidad_pelota_x2 = 0.5
+velocidad_pelota_y2 = 0
+#Creamos el lanzador - We create the launcher
+lanzador_x = 965
+lanzador_y = 800
+lanzador_width = 20
+lanzador_height = 200
+#Creamos el impulsor - We create the pusher
+impulsor_x=990
+impulsor_y=10
+impulsor_width=50
+impulsor_height=100
+#Creamos el bumper de vidas extra - We create the extra life bumper
+bumperExtra_x = int(random.randint(280,620))
+bumperExtra_y = int(random.randint(250,500))
+bumperExtra_width = 60
+bumperExtra_height = 60
+#Creamos el bumper legendario - We create the legendary bumper
+bumperLegendario_x = int(random.randint(280,620))
+bumperLegendario_y = int(random.randint(30,280))
+bumperLegendario_width = 60
+bumperLegendario_height = 60
+#------------------VARIABLES DE FUNCIONAMIENTO DEL JUEGO - OPERATING GAME VARIABLES------------------#
+#Puntos de gravedad (son los mismos para todas las pelotas) - Gravity points (the same for all balls)
+puntosGravedad = 0.001
+#Fuerza de movimiento de la pelota protagonista - Movement force of main ball
+fuerza = 0
+fuerza_y = 0
+#Fuerza de movimiento de las pelotas extras - Movement force of extra balls
+#Fuerza pelota extra 1 - First extra ball force
+fuerza1 = 1
+fuerza1_y = 0
+#Fuerza pelota extra 2 - Second extra ball force
+fuerza2 = 1
+fuerza2_y = 0
+#Variables de fase - Phase variables
+saltar = True
+impulso = False
+inGame = False
+#Contadores de tiempo - Timers 
+contador = 0
+contadorVidaExtra = 10000
+contadorLegendario = 15000
+#Puntos y acumuladores de puntos - Points and acumulators
+#Puntos - Points
+puntos = 0
+recordPuntos = 0
+#Acumuladores de puntos - Acumulator points
+acumPuntos = 0
+acumPuntosVidaExtra = 0
+acumPuntosLegendario = 0
+puntosFaltantes = 0
+puntosFaltantesLegendario = 0
+#Variables de superPower - Superpower variables
+activar = False
+invertirGravedad = False
+contadorGravedad = 20000
+activacionBumpers = False
+rescue = False
+#Variables de activación de elementos - Elements activation variables
+extras1 = False
+extras2 = False
+levantar = False
+vidaExtra = False
+legendario = False
+poderes = False
+#Otras variables - Other variables
+vidas = 3
+nuevaPosicion = False
+nuevaPosicionVidaExtra = False
+nuevaPosicionLegendaria = False
+#----------------LLAMADA A FUNCIONES PARA GUARDAR SPRITES - CALLING THE METHODS TO SAVE SPRITES-------------------------#
+#Guardamos las Walles en su grupo - We save the walls in his group
+Walles = superficie(WallsSprites)
+#Guardamos los objetos del juego - We save the objects in his group
+separator = createSeparator(SpriteObjetos)
+bumper = bumpers(SpriteObjetos)
+relleno = fillBumperss(SpriteObjetos)
+platformIzq = LeftPlatform(SpriteObjetos)
+platformDer = RightPlatform(SpriteObjetos)
+tuberia = Tuberia(SpriteObjetos)
+#Guardamos los sticks sin levantar - We save the sticks without raise 
+StickDer = LeftStick(SpriteObjetosStick)
+StickIzq = RightStick(SpriteObjetosStick)
+#Guardamos los sticks levantados - We save the raise sticks
+StickDerLevantado = LeftRaiseStick(SpriteObjetosStickLevantado)
+StickIzqLevantado = RightRaiseStick(SpriteObjetosStickLevantado)
+#Guardamos la Wall del super poder rescue - We save rescue superpower wall
+salvar = WallRescue(SpritePoderesrescue)
+#---------------------------GENERADOR DE FRASES - SENTENCES GENERATOR----------------------------#
+frasePuntos = pygame.font.Font(None,35) 
+fraseVidas = pygame.font.Font(None,35)
+fraseVidaExtra = pygame.font.Font(None,35)
+fraseGravedad = pygame.font.Font(None,35)
+fraseLegendaria = pygame.font.Font(None,35)
+frasePoderes = pygame.font.Font(None,35)
+
+#Creamos el bucle que permitira arrancar el juego una vez que se ejecute
+#We create the loop that allows run the game one times that execute
+funcionando = True
+while (funcionando and vidas>0):
+    #Establecemos que terminamos el juego cuando pulsemos la X en la ventana
+    #We establish that finish the game when we press the X in the window
+    for event in pygame.event.get():
+        
+        if event.type == pygame.QUIT:
+            funcionando = False
+    
+    #----------------------MÉTODOS DE FASE - PHASE METHODS---------------#
+    pelota_y,lanzador_y,contador,saltar,impulso,fuerza ,velocidad_pelota_x= throw(pelota_y,lanzador_y,lanzador_height,contador,saltar,impulso,fuerza,velocidad_pelota_x)
+    pelota_x,impulsor_x,impulso,contador,inGame = push(pelota_x,impulsor_x,impulso,contador,inGame)
+    pelota_x,pelota_y,puntosGravedad,velocidad_pelota_x,velocidad_pelota_y,fuerza,impulsor_x,inGame,impulso,saltar,puntos,recordPuntos,acumPuntos,acumPuntosVidaExtra,extras1,extras2,levantar,vidaExtra,vidas,bumperExtra_x,bumperExtra_y,contadorVidaExtra,nuevaPosicionVidaExtra,nuevaPosicionLegendaria,fuerza_y,legendario,acumPuntosLegendario,bumperLegendario_x,bumperLegendario_y,contadorLegendario,poderes = StartGame(pelota_x,pelota_y,puntosGravedad,velocidad_pelota_x,velocidad_pelota_y,fuerza,impulsor_x,inGame,impulso,saltar,puntos,recordPuntos,acumPuntos,acumPuntosVidaExtra,extras1,extras2,levantar,vidaExtra,vidas,bumperExtra_x,bumperExtra_y,contadorVidaExtra,nuevaPosicionVidaExtra,nuevaPosicionLegendaria,fuerza_y,legendario,acumPuntosLegendario,bumperLegendario_x,bumperLegendario_y,contadorLegendario,poderes)
+    poderes,invertirGravedad,activacionBumpers,rescue,activar,puntosGravedad,contadorGravedad,vidaExtra,legendario,inGame = superPower (poderes,invertirGravedad,activacionBumpers,rescue,activar,puntosGravedad,contadorGravedad,vidaExtra,legendario,inGame)
+    #Pintamos el fondo de la ventana y las Walles - We draw the window deep and walls
+    screen.fill(black)
+    WallsSprites.draw(screen)
+    #Cambio de posición del bumper de vida extra y el bumper legendario
+    #Change of position of extra life bumper and legendary bumper
+    if(nuevaPosicionVidaExtra==True):
+        bumperExtra_x = random.randint(280,620)
+        bumperExtra_y = random.randint(250,500)
+    if(nuevaPosicionLegendaria==True):
+        bumperLegendario_x = random.randint(70,810)
+        bumperLegendario_y = random.randint(30,280)
+    #Cambio de posición de los sticks - Change of position of sticks
+    if(levantar==False):
+        SpriteObjetosStick.draw(screen)
+    else:
+        SpriteObjetosStickLevantado.draw(screen)
+    #Dibujamos el lanzador el impulsor y la pelota - We draw the launcher, pusher and ball
+    pygame.draw.rect(screen,red,(lanzador_x,lanzador_y,lanzador_width,lanzador_height))
+    pygame.draw.rect(screen,yellow,(impulsor_x,impulsor_y,impulsor_width,impulsor_height))
+    pygame.draw.circle(screen,blue,(pelota_x,pelota_y),pelota_radio)
+    #Dibujamos las pelotas extras cuando se cumpla su condición - We draw the extra balls when his condition is met
+    if(extras1==True):
+        pygame.draw.circle(screen,green,(pelota_x1,pelota_y1),pelota_radio1)
+        extras1,pelota_x1,pelota_y1,velocidad_pelota_x1,velocidad_pelota_y1,fuerza1,fuerza1_y,puntosGravedad,puntos,acumPuntos,acumPuntosVidaExtra,levantar,acumPuntosLegendario,poderes = FirstExtraBall(extras1,pelota_x1,pelota_y1,velocidad_pelota_x1,velocidad_pelota_y1,fuerza1,fuerza1_y,puntosGravedad,puntos,acumPuntos,acumPuntosVidaExtra,levantar,acumPuntosLegendario,poderes)
+    if(extras2==True):
+        pygame.draw.circle(screen,red,(pelota_x2,pelota_y2),pelota_radio2)
+        extras2,pelota_x2,pelota_y2,velocidad_pelota_x2,velocidad_pelota_y2,fuerza2,fuerza2_y,puntosGravedad,puntos,acumPuntos,acumPuntosVidaExtra,levantar,acumPuntosLegendario,poderes = SecondExtraBall(extras2,pelota_x2,pelota_y2,velocidad_pelota_x2,velocidad_pelota_y2,fuerza2,fuerza2_y,puntosGravedad,puntos,acumPuntos,acumPuntosVidaExtra,levantar,acumPuntosLegendario,poderes)
+    #Dibujamos los objetos del juego - We draw the game object
+    SpriteObjetos.draw(screen)
+    if(rescue==True and activar==True):
+        SpritePoderesrescue.draw(screen)
+        pelota_x,pelota_y,pelota_x1,pelota_y1,pelota_x2,pelota_y2,fuerza_y,fuerza1_y,fuerza2_y = PlaceRescue(pelota_x,pelota_y,pelota_x1,pelota_y1,pelota_x2,pelota_y2,fuerza_y,fuerza1_y,fuerza2_y)
+    #--------Mensajes - MESSAGES---------#
+    #Puntos - Points
+    contadorPuntos = "PUNTOS: "+str(puntos)
+    mensajePuntos = frasePuntos.render(contadorPuntos,1,white)
+    screen.blit(mensajePuntos,(1110,20))
+    #Record de puntos - Points record
+    record = "TU RECORD: "+str(recordPuntos)
+    mensajeRecordPuntos = frasePuntos.render(record,1,white)
+    screen.blit(mensajeRecordPuntos,(1110,80))
+    #Vidas - Lifes
+    contadorVidas = "TUS VIDAS: "+str(vidas)
+    mensajeVidas = fraseVidas.render(contadorVidas,1,white)
+    screen.blit(mensajeVidas,(1110,190))
+    #Puntos para las vidas extras - Points to extra life
+    puntosFaltantes = 1000 - acumPuntosVidaExtra
+    if(vidaExtra == False):
+        marcadorVidaExtra = "FALTAN "+str(puntosFaltantes)
+        mensajeVidaExtra = fraseVidaExtra.render(marcadorVidaExtra,1,white)
+        screen.blit(mensajeVidaExtra,(1110,260))
+    #Indicador de vida extra existente y dibujado del bumper de vida extra 
+    #Existent extra life indicator and draw of extra life bumper
+    else:
+        pygame.draw.rect(screen,green,(bumperExtra_x,bumperExtra_y,bumperExtra_width,bumperExtra_height))
+        indicarVidaExtraExistente = "VIDA EXTRA ACTIVA"
+        mensajeVidaExtra_Extra = fraseVidaExtra.render(indicarVidaExtraExistente,1,white)
+        screen.blit(mensajeVidaExtra_Extra,(1050,260))
+        indicarTiempo = str(int(contadorVidaExtra/1000))+" SEGUNDOS"
+        mensajeTiempo = fraseVidaExtra.render(indicarTiempo,1,white)
+        screen.blit(mensajeTiempo,(1110,300))
+    #Indicamos el nivel de gravedad en el juego - We indicate the gravity level in game
+    nivelGravedad = "NIVEL GRAVEDAD "+str(int(puntosGravedad*1000))
+    mensajeGravedad = fraseGravedad.render(nivelGravedad,1,white)
+    screen.blit(mensajeGravedad,(1080,400))
+    #Puntos para el bumper legendario - Points to the legendary bumper
+    puntosFaltantesLegendario = 5000 - acumPuntosLegendario
+    if(legendario == False):
+        marcadorLegendario = "FALTAN "+str(puntosFaltantesLegendario)
+        mensajeLegendario = fraseLegendaria.render(marcadorLegendario,1,white)
+        screen.blit(mensajeLegendario,(1110,500))
+    #Indicador de que existe el bumper legendario y dibujado del bumper legendario
+    #Existent legendary bumper indicator and draw of legendary bumper
+    else:
+        pygame.draw.rect(screen,orange,(bumperLegendario_x,bumperLegendario_y,bumperLegendario_width,bumperLegendario_height))
+        indicarLegendarioExistente = "BUMPER LEGENDARIO"
+        indicarLegendarioExistenteActivo = "ACTIVO"
+        mensajeLegendarioExistente = fraseLegendaria.render(indicarLegendarioExistente,1,white)
+        mensajeLegendarioExistenteActivo = fraseLegendaria.render(indicarLegendarioExistenteActivo,1,white)
+        screen.blit(mensajeLegendarioExistente,(1050,500))
+        screen.blit(mensajeLegendarioExistenteActivo,(1130,550))
+        indicarTiempoLegendario = str(int(contadorLegendario/1000))+" SEGUNDOS"
+        mensajeTiempoLegendario = fraseLegendaria.render(indicarTiempoLegendario,1,white)
+        screen.blit(mensajeTiempoLegendario,(1100,600))
+    #Indicador de poderes - Power indicator
+    #Sin poderes - No powers
+    if(invertirGravedad==False and activacionBumpers==False and rescue==False):
+        noPoderes = "SIN PODERES"
+        mensajeNoPoderes = frasePoderes.render(noPoderes,1,white)
+        screen.blit(mensajeNoPoderes,(1110,700))
+    #Invertir gravedad - Reverse gravity
+    elif(invertirGravedad==True and activacionBumpers==False and rescue==False):
+        if(activar==False):
+            poderGravedad = "INVERTIR GRAVEDAD"
+            mensajePoderGravedad = frasePoderes.render(poderGravedad,1,white)
+            screen.blit(mensajePoderGravedad,(1070,700))
+            indicarActivar = "PULSA F PARA ACTIVAR"
+            mensajeActivar = frasePoderes.render(indicarActivar,1,white)
+            screen.blit(mensajeActivar,(1050,750))
+        #Segundos restantes - seconds remaining
+        else:
+            poderGravedad = "INVERTIR GRAVEDAD"
+            mensajePoderGravedad = frasePoderes.render(poderGravedad,1,white)
+            screen.blit(mensajePoderGravedad,(1070,700))
+            segundosGravedad = str(int(contadorGravedad/1000))+" SEGUNDOS"
+            mensajeSegundosGravedad = frasePoderes.render(segundosGravedad,1,white)
+            screen.blit(mensajeSegundosGravedad,(1110,750))
+    #Activar bumpers - Bumpers activation
+    elif(activacionBumpers==True and invertirGravedad==False and rescue==False):
+        poderBumper = "ACTIVAR BUMPERS"
+        mensajePoderBumper = frasePoderes.render(poderBumper,1,white)
+        screen.blit(mensajePoderBumper,(1080,700))
+        indicarActivar = "PULSA F PARA ACTIVAR"
+        mensajeActivar = frasePoderes.render(indicarActivar,1,white)
+        screen.blit(mensajeActivar,(1050,750))
+    #rescue - Rescue
+    elif(rescue==True and activacionBumpers==False and invertirGravedad==False):
+        if(activar==False):
+            poderrescue = "rescue"
+            mensajePoderrescue = frasePoderes.render(poderrescue,1,white)
+            screen.blit(mensajePoderrescue,(1070,700))
+            indicarActivar = "PULSA F PARA ACTIVAR"
+            mensajeActivar = frasePoderes.render(indicarActivar,1,white)
+            screen.blit(mensajeActivar,(1050,750))
+        #Segundos restantes - Seconds remaining
+        else:
+            poderrescue = "rescue"
+            mensajePoderrescue = frasePoderes.render(poderrescue,1,white)
+            screen.blit(mensajePoderrescue,(1110,700))
+            segundosrescue = str(int(contadorGravedad/1000))+" SEGUNDOS"
+            mensajeSegundosrescue = frasePoderes.render(segundosrescue,1,white)
+            screen.blit(mensajeSegundosrescue,(1110,750))
+    
+
+    #Actualizamos continuamente la pantalla - We udapte constantly the screen
+    
+    pygame.display.flip()
+
+#Cuando se acabe el bucle se cierra la ventana y el juego - When the loop end, the window and the game are closed
+pygame.quit() 
